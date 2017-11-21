@@ -7,17 +7,9 @@
 * 修改PNChartDemo中Y文字坐标对不齐的问题。
 * 修改Demo中折线图chartMargin属性自定义图表坐标轴文字错乱的问题。
 
+![](https://github.com/superDelmore/MC_PNChartView/blob/master/demo1.png?raw=true)
 
-
-### 系统要求
-因为公司的项目系统要求为iOS8以上，所以代码在iOS8以上是没有问题的，iOS8以下系统没有测试。
-
-需要的framework
-
-* Foundation.framework
-* UIKit.framework
-* CoreGraphics.framework
-* QuartzCore.framework
-以上为[PNChart](https://github.com/kevinzhow/PNChart)所需要的framework。
+![](https://github.com/superDelmore/MC_PNChartView/blob/master/demo2.png?raw=true)
 
 ### 用法
+和PNChart用法一样，只是新增了一些属性。具体参见demo。
