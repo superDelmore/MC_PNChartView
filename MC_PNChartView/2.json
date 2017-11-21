@@ -1,0 +1,68 @@
+{
+  "data" : {
+    "discountData" : [
+      {
+        "name" : "会员折扣",
+        "percent" : "11%",
+        "snum" : 1593.88
+      },
+      {
+        "name" : "积分抵扣",
+        "percent" : "18%",
+        "snum" : 2631.1
+      },
+      {
+        "name" : "优惠券",
+        "percent" : "8%",
+        "snum" : 1162.2
+      },
+      {
+        "name" : "随机立减",
+        "percent" : "0%",
+        "snum" : 0
+      },
+      {
+        "name" : "满减",
+        "percent" : "1%",
+        "snum" : 79
+      },
+      {
+        "name" : "其他",
+        "percent" : "63%",
+        "snum" : 9340.02
+      }
+    ],
+    "discountMoney" : 8057.05,
+    "discountNum" : 195,
+    "refundData" : [
+      {
+        "name" : "微信",
+        "snum" : "134.47"
+      },
+      {
+        "name" : "支付宝",
+        "snum" : "18.40"
+      },
+      {
+        "name" : "余额",
+        "snum" : "6.32"
+      },
+      {
+        "name" : "现金",
+        "snum" : "345.25"
+      },
+      {
+        "name" : "刷卡",
+        "snum" : "0.00"
+      },
+      {
+        "name" : "其他",
+        "snum" : "20.00"
+      }
+    ],
+    "refundMoney" : "524.44",
+    "refundNum" : "0"
+  },
+  "error" : 0,
+  "msg" : ""
+}
