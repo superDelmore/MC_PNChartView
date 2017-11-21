@@ -90,37 +90,7 @@
         CGPoint point2 = [array.firstObject CGPointValue];
         CGRect textRect = [array.lastObject CGRectValue];
         
-        /*
-        // 折线
-        CGFloat line_x;
-        CGFloat label_x;
-        
-        if (rad > 0 && rad < 180) { // 右边的线
-            line_x = CGRectGetWidth(self.frame)  - size.width;
-            label_x  = line_x + size.width / 2;
-            if (point2.x + size.width > CGRectGetWidth(self.frame)) {
-                point2.x = CGRectGetWidth(self.frame) - size.width;
-            }
-        } else {
-            line_x = size.width;
-            label_x = size.width - size.width / 2;
-            if (point2.x < size.width) {
-                point2.x = size.width;
-            }
-        }
-        CGRect textRect = CGRectMake(label_x-size.width/2.0, point2.y-size.height/2.0, size.width, size.height);
-         */
-/*
-        BOOL isFrameIntersect = false;
-        for (NSValue *value in self.textFrames) {
-            CGRect rect = [value CGRectValue];
-            if (CGRectIntersectsRect(rect, textRect)) {
-                isFrameIntersect = true;
-                break;
-            }
-        }
-        */
-//        NSLog(@"point 2 = %@",NSStringFromCGPoint(point2));
+       
         [path addLineToPoint:point2];
         if (rad > 0 && rad < 180) { // 右边的线
             CGPoint point3 = CGPointMake(CGRectGetMinX(textRect), point2.y);
@@ -129,23 +99,7 @@
             CGPoint point3 = CGPointMake(CGRectGetMaxX(textRect), point2.y);
             [path addLineToPoint: point3];
         }
-//        CGPoint point3 = CGPointMake(CGRectGetMaxX(textRect), point2.y);
-//        [path addLineToPoint: point3];
-//        NSLog(@"point 3 = %@",NSStringFromCGPoint(point3));
         
-        //    [path stroke];
-        /*
-         if (rad > 0 && rad < 90) {
-         lineLayer.strokeColor   = [UIColor redColor].CGColor;
-         
-         }else if(rad > 90 && rad < 180){
-         lineLayer.strokeColor   = [UIColor yellowColor].CGColor;
-         }else if (rad > 180 && rad < 270) {
-         lineLayer.strokeColor   = [UIColor grayColor].CGColor;
-         }else if (rad > 270 && rad < 360) {
-         lineLayer.strokeColor   = [UIColor blueColor].CGColor;
-         }
-         */
         lineLayer.strokeColor   = currentDataItem.color.CGColor;
         lineLayer.fillColor = [UIColor clearColor].CGColor;
         lineLayer.lineWidth = 1.0;
@@ -257,69 +211,7 @@
     CGFloat posX = 0.0;
     CGFloat posY = 0.0;
     CGFloat arcAngle = M_PI * cirAngle / 180.0;
-    /*
-    if (cirAngle < 0 && cirAngle > -90) {
-     
-      //  posX = cirX + cos(arcAngle) * radiu;
-     // posY = cirY + sin(arcAngle) * radiu;
-     
-        posX = cirX + sin(arcAngle) * radiu;
-        posY = cirY - cos(arcAngle) * radiu;
-
-    } else if (cirAngle == 0) {
-        
-//        posX = cirX;
-//        posY = cirY + radiu;
-        
-        posX = cirX+radiu;
-        posY = cirY;
-    } else if (cirAngle > 0 && cirAngle < 90) {
-        
-//        arcAngle = M_PI * (180 - cirAngle) / 180.0;
-//        posX = cirX - cos(arcAngle) * radiu;
-//        posY = cirY + sin(arcAngle) * radiu;
-        
-        posX = cirX + cos(arcAngle) * radiu;
-        posY = cirY + sin(arcAngle) * radiu;
-        
-    } else if (cirAngle == 90) {
-        
-//        posX = cirX - radiu;
-//        posY = cirY;
-        
-        posX = cirX;
-        posY = cirY + radiu;
-    } else if (cirAngle > 90 && cirAngle < 180) {
-        
-//        arcAngle = M_PI * (cirAngle - 180) / 180.0;
-//        posX = cirX - cos(arcAngle) * radiu;
-//        posY = cirY - sin(arcAngle) * radiu;
-        
-        arcAngle = M_PI * (180 - cirAngle) / 180.0;
-        posX = cirX - cos(arcAngle) * radiu;
-        posY = cirY + sin(arcAngle) * radiu;
-
-    } else if (cirAngle == 180) {
-        
-//        posX = cirX;
-//        posY = cirY - radiu;
-        
-        posX = cirX - radiu;
-        posY = cirY;
-    } else if(cirAngle > 180 && cirAngle < 270) {
-        
-//        arcAngle = M_PI * (360 - cirAngle) / 180.0;
-//        posX = cirX + cos(arcAngle) * radiu;
-//        posY = cirY - sin(arcAngle) * radiu;
-        
-         arcAngle = M_PI * (360 - cirAngle) / 180.0;
-        posX = cirX - sin(arcAngle) * radiu;
-        posY = cirY - cos(arcAngle) * radiu;
-    }else if (cirAngle == 270) {
-        posX = cirX;
-        posY = cirY - radiu;
-    }
-*/
+ 
     if (cirAngle == 0) {
         posX = cirX ;
         posY = cirY - radiu;
