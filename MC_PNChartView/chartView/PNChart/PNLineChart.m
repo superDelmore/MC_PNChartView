@@ -37,21 +37,21 @@
 
 - (id)initWithCoder:(NSCoder *)coder {
     self = [super initWithCoder:coder];
-
+    
     if (self) {
         [self setupDefaultValues];
     }
-
+    
     return self;
 }
 
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
-
+    
     if (self) {
         [self setupDefaultValues];
     }
-
+    
     return self;
 }
 
@@ -80,7 +80,7 @@
 - (void)setYLabels {
     CGFloat yStep = (_yValueMax - _yValueMin) / _yLabelNum;
     CGFloat yStepHeight = _chartCavanHeight / _yLabelNum;
-
+    
     if (_yChartLabels) {
         for (PNChartLabel *label in _yChartLabels) {
             [label removeFromSuperview];
@@ -88,36 +88,36 @@
     } else {
         _yChartLabels = [NSMutableArray new];
     }
-
+    
     if (yStep == 0.0) {
         PNChartLabel *minLabel = [[PNChartLabel alloc] initWithFrame:CGRectMake(0.0, (NSInteger) _chartCavanHeight, (NSInteger) _chartMarginBottom, (NSInteger) _yLabelHeight)];
         minLabel.text = [self formatYLabel:0.0];
         [self setCustomStyleForYLabel:minLabel];
         [self addSubview:minLabel];
         [_yChartLabels addObject:minLabel];
-
+        
         PNChartLabel *midLabel = [[PNChartLabel alloc] initWithFrame:CGRectMake(0.0, (NSInteger) (_chartCavanHeight / 2), (NSInteger) _chartMarginBottom, (NSInteger) _yLabelHeight)];
         midLabel.text = [self formatYLabel:_yValueMax];
         [self setCustomStyleForYLabel:midLabel];
         [self addSubview:midLabel];
         [_yChartLabels addObject:midLabel];
-
+        
         PNChartLabel *maxLabel = [[PNChartLabel alloc] initWithFrame:CGRectMake(0.0, 0.0, (NSInteger) _chartMarginBottom, (NSInteger) _yLabelHeight)];
         maxLabel.text = [self formatYLabel:_yValueMax * 2];
         [self setCustomStyleForYLabel:maxLabel];
         [self addSubview:maxLabel];
         [_yChartLabels addObject:maxLabel];
-
+        
     } else {
         NSInteger index = 0;
         NSInteger num = _yLabelNum + 1;
-
+        
         while (num > 0) {
-//            _chartCavanHeight - i * yStepHeight
+            //            _chartCavanHeight - i * yStepHeight
             CGRect labelFrame = CGRectMake(0.0,
-                    (NSInteger) (_chartCavanHeight + _chartMarginTop - index * yStepHeight),
-                    (CGFloat) ((NSInteger) _chartMarginLeft * 0.9),
-                    (NSInteger) _yLabelHeight);
+                                           (NSInteger) (_chartCavanHeight + _chartMarginTop - index * yStepHeight),
+                                           (CGFloat) ((NSInteger) _chartMarginLeft * 0.9),
+                                           (NSInteger) _yLabelHeight);
             PNChartLabel *label = [[PNChartLabel alloc] initWithFrame:labelFrame];
             label.center = CGPointMake(label.center.x, _chartCavanHeight - index * yStepHeight);
             [label setTextAlignment:NSTextAlignmentRight];
@@ -134,14 +134,14 @@
 - (void)setYLabels:(NSArray *)yLabels {
     _showGenYLabels = NO;
     _yLabelNum = yLabels.count - 1;
-
+    
     CGFloat yLabelHeight;
     if (_showLabel) {
         yLabelHeight = _chartCavanHeight / [yLabels count];
     } else {
         yLabelHeight = (self.frame.size.height) / [yLabels count];
     }
-
+    
     return [self setYLabels:yLabels withHeight:yLabelHeight];
 }
 
@@ -155,31 +155,32 @@
     } else {
         _yChartLabels = [NSMutableArray new];
     }
-
+    
     NSString *labelText;
     
     [self resetCavanHeight];
     
     if (_showLabel) {
         CGFloat yStepHeight = _chartCavanHeight / _yLabelNum;
-
+        
         for (int index = 0; index < yLabels.count; index++) {
             labelText = yLabels[(NSUInteger) index];
-
-            CGFloat y = (NSInteger) (_chartCavanHeight + _chartMarginTop - index * yStepHeight);
-//            NSInteger y = (NSInteger) (_chartCavanHeight + _chartMarginTop - index * yStepHeight - yStepHeight/2.0);
             
-//            PNChartLabel *label = [[PNChartLabel alloc] initWithFrame:CGRectMake(0.0, y, (CGFloat) ((NSInteger) _chartMarginLeft * 0.9), (NSInteger) _yLabelHeight)];
+            CGFloat y = (NSInteger) (_chartCavanHeight + _chartMarginTop - index * yStepHeight);
+            //            NSInteger y = (NSInteger) (_chartCavanHeight + _chartMarginTop - index * yStepHeight - yStepHeight/2.0);
+            
+            //            PNChartLabel *label = [[PNChartLabel alloc] initWithFrame:CGRectMake(0.0, y, (CGFloat) ((NSInteger) _chartMarginLeft * 0.9), (NSInteger) _yLabelHeight)];
             PNChartLabel *label = [[PNChartLabel alloc] initWithFrame:CGRectMake(0.0, y, (CGFloat) ((NSInteger) _chartMarginLeft * 0.9), (NSInteger) _yLabelHeight)];
             [label setTextAlignment:NSTextAlignmentRight];
             label.numberOfLines = 1;
             label.adjustsFontSizeToFitWidth = false;
             label.text = labelText;
             [self setCustomStyleForYLabel:label];
-//            CGSize size = [[self class] sizeOfString:labelText withWidth:_chartMarginLeft  font:label.font];
+            //            CGSize size = [[self class] sizeOfString:labelText withWidth:_chartMarginLeft  font:label.font];
             CGSize size = [labelText sizeWithAttributes:@{NSFontAttributeName:label.font}];
             y = y-size.height*0.5;
             label.frame = CGRectMake(0.0, y, _chartMarginLeft , size.height);
+            label.center = CGPointMake(label.center.x, _chartCavanHeight - index * yStepHeight + _chartMarginTop);
 
             [self addSubview:label];
             [_yChartLabels addObject:label];
@@ -189,26 +190,26 @@
 
 - (CGFloat)computeEqualWidthForXLabels:(NSArray *)xLabels {
     CGFloat xLabelWidth;
-
+    
     if (_showLabel) {
         xLabelWidth = _chartCavanWidth / [xLabels count];
     } else {
         xLabelWidth = (self.frame.size.width) / [xLabels count];
     }
-
+    
     return xLabelWidth;
 }
 
 
 - (void)setXLabels:(NSArray *)xLabels {
     CGFloat xLabelWidth;
-
+    
     if (_showLabel) {
         xLabelWidth = _chartCavanWidth / [xLabels count];
     } else {
         xLabelWidth = (self.frame.size.width - _chartMarginLeft - _chartMarginRight) / [xLabels count];
     }
-
+    
     return [self setXLabels:xLabels withWidth:xLabelWidth];
 }
 
@@ -222,20 +223,20 @@
     } else {
         _xChartLabels = [NSMutableArray new];
     }
-
+    
     NSString *labelText;
     
     [self resetCavanHeight];
-
+    
     if (_showLabel) {
         for (NSUInteger index = 0; index < xLabels.count; index++) {
             labelText = xLabels[index];
-
+            
             NSInteger x = (NSInteger) (index * _xLabelWidth + _chartMarginLeft);
-//            NSInteger y = (NSInteger) (_chartMarginBottom + _chartCavanHeight);
+            //            NSInteger y = (NSInteger) (_chartMarginBottom + _chartCavanHeight);
             NSInteger y = (NSInteger) (_chartMarginTop + _chartCavanHeight);
-
-
+            
+            
             PNChartLabel *label = [[PNChartLabel alloc] initWithFrame:CGRectMake(x, y, (NSInteger) _xLabelWidth, (NSInteger) _chartMarginBottom)];
             [label setTextAlignment:NSTextAlignmentCenter];
             label.text = labelText;
@@ -250,18 +251,18 @@
     if (_xLabelFont) {
         label.font = _xLabelFont;
     }
-
+    
     if (_xLabelColor) {
         label.textColor = _xLabelColor;
     }
-
+    
 }
 
 - (void)setCustomStyleForYLabel:(UILabel *)label {
     if (_yLabelFont) {
         label.font = _yLabelFont;
     }
-
+    
     if (_yLabelColor) {
         label.textColor = _yLabelColor;
     }
@@ -283,14 +284,14 @@
     // Get the point user touched
     UITouch *touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
-
+    
     for (NSUInteger p = 0; p < _pathPoints.count; p++) {
         NSArray *linePointsArray = _endPointsOfPath[p];
-
+        
         for (NSUInteger i = 0; i < (int) linePointsArray.count - 1; i += 2) {
             CGPoint p1 = [linePointsArray[i] CGPointValue];
             CGPoint p2 = [linePointsArray[i + 1] CGPointValue];
-
+            
             //只有一个点
             if (CGPointEqualToPoint(p1, p2)) {
                 if ([_delegate respondsToSelector:@selector(userClickedOnLinePoint:lineIndex:)]) {
@@ -301,7 +302,7 @@
             // Closest distance from point to line
             float distance = (float) fabs(((p2.x - p1.x) * (touchPoint.y - p1.y)) - ((p1.x - touchPoint.x) * (p1.y - p2.y)));
             distance /= hypot(p2.x - p1.x, p1.y - p2.y);
-
+            
             if (distance <= 5.0) {
                 // Conform to delegate parameters, figure out what bezier path this CGPoint belongs to.
                 NSUInteger lineIndex = 0;
@@ -324,24 +325,24 @@
     // Get the point user touched
     UITouch *touch = [touches anyObject];
     CGPoint touchPoint = [touch locationInView:self];
-
+    
     for (NSUInteger p = 0; p < _pathPoints.count; p++) {
         NSArray *linePointsArray = _pathPoints[p];
-
+        
         for (NSUInteger i = 0; i < (int) linePointsArray.count - 1; i += 1) {
             CGPoint p1 = [linePointsArray[i] CGPointValue];
             CGPoint p2 = [linePointsArray[i + 1] CGPointValue];
-
+            
             float distanceToP1 = (float) fabs(hypot(touchPoint.x - p1.x, touchPoint.y - p1.y));
             float distanceToP2 = (float) hypot(touchPoint.x - p2.x, touchPoint.y - p2.y);
-
+            
             float distance = MIN(distanceToP1, distanceToP2);
-
+            
             if (distance <= 10.0) {
                 [_delegate userClickedOnLineKeyPoint:touchPoint
                                            lineIndex:p
                                           pointIndex:(distance == distanceToP2 ? i + 1 : i)];
-
+                
                 return;
             }
         }
@@ -390,12 +391,12 @@
     // set the chart will be misplaced
     [self resetCavanHeight];
     [self prepareYLabelsWithData:_chartData];
-
+    
     _chartPath = [[NSMutableArray alloc] init];
     _pointPath = [[NSMutableArray alloc] init];
     _gradeStringPaths = [NSMutableArray array];
     _progressLinePathsColors = [[NSMutableArray alloc] init];
-
+    
     [self calculateChartPath:_chartPath
                andPointsPath:_pointPath
             andPathKeyPoints:_pathPoints
@@ -410,16 +411,16 @@
         UIGraphicsBeginImageContext(self.frame.size);
         if (chartData.inflexionPointColor) {
             pointLayer.strokeColor = [[chartData.inflexionPointColor
-                    colorWithAlphaComponent:chartData.alpha] CGColor];
+                                       colorWithAlphaComponent:chartData.alpha] CGColor];
         } else {
             pointLayer.strokeColor = [PNGreen CGColor];
         }
         // setup the color of the chart line
         NSArray<UIBezierPath *> *progressLines = _chartPath[lineIndex];
         UIBezierPath *pointPath = _pointPath[lineIndex];
-
+        
         pointLayer.path = pointPath.CGPath;
-
+        
         [CATransaction begin];
         for (NSUInteger index = 0; index < progressLines.count; index++) {
             CAShapeLayer *chartLine = chartLines[index];
@@ -427,20 +428,20 @@
             [chartLine addAnimation:self.pathAnimation forKey:@"strokeEndAnimation"];
             chartLine.strokeEnd = 1.0;
         }
-
+        
         // if you want cancel the point animation, comment this code, the point will show immediately
         if (chartData.inflexionPointStyle != PNLineChartPointStyleNone) {
             [pointLayer addAnimation:self.pathAnimation forKey:@"strokeEndAnimation"];
         }
-
+        
         [CATransaction commit];
-
+        
         NSMutableArray *textLayerArray = self.gradeStringPaths[lineIndex];
         for (CATextLayer *textLayer in textLayerArray) {
             CABasicAnimation *fadeAnimation = [self fadeAnimation];
             [textLayer addAnimation:fadeAnimation forKey:nil];
         }
-
+        
         UIGraphicsEndImageContext();
     }
     [self setNeedsDisplay];
@@ -452,7 +453,7 @@
           andPathKeyPoints:(NSMutableArray *)pathPoints
      andPathStartEndPoints:(NSMutableArray *)pointsOfPath
 andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
-
+    
     // remove old point label
     for (NSArray *ary in _gradeStringPaths) {
         @autoreleasepool {
@@ -465,25 +466,25 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
     
     
     // Draw each line
-
+    
     for (NSUInteger lineIndex = 0; lineIndex < self.chartData.count; lineIndex++) {
         PNLineChartData *chartData = self.chartData[lineIndex];
-
+        
         CGFloat yValue;
         NSMutableArray<UIBezierPath *> *progressLines = [NSMutableArray new];
         NSMutableArray<UIColor *> *progressLineColors = [NSMutableArray new];
-
+        
         UIBezierPath *pointPath = [UIBezierPath bezierPath];
-
-
+        
+        
         [chartPath insertObject:progressLines atIndex:lineIndex];
         [pointsPath insertObject:pointPath atIndex:lineIndex];
         [progressLinePathsColors insertObject:progressLineColors atIndex:lineIndex];
-
-
+        
+        
         NSMutableArray *gradePathArray = [NSMutableArray array];
         [self.gradeStringPaths addObject:gradePathArray];
-
+        
         NSMutableArray *linePointsArray = [[NSMutableArray alloc] init];
         NSMutableArray *lineStartEndPointsArray = [[NSMutableArray alloc] init];
         int last_x = 0;
@@ -491,33 +492,33 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
         NSMutableArray<NSDictionary<NSString *, NSValue *> *> *progressLinePaths = [NSMutableArray new];
         UIColor *defaultColor = chartData.color != nil ? chartData.color : [UIColor greenColor];
         CGFloat inflexionWidth = chartData.inflexionPointWidth;
-
+        
         for (NSUInteger i = 0; i < chartData.itemCount; i++) {
-
+            
             NSValue *from = nil;
             NSValue *to = nil;
-
+            
             yValue = chartData.getData(i).y;
-
+            
             int x = (int) (i * _xLabelWidth + _chartMarginLeft + _xLabelWidth / 2.0);
             int y = (int)[self yValuePositionInLineChart:yValue];
-
+            
             // Circular point
             if (chartData.inflexionPointStyle == PNLineChartPointStyleCircle) {
-
+                
                 CGRect circleRect = CGRectMake(x - inflexionWidth / 2, y - inflexionWidth / 2, inflexionWidth, inflexionWidth);
                 CGPoint circleCenter = CGPointMake(circleRect.origin.x + (circleRect.size.width / 2), circleRect.origin.y + (circleRect.size.height / 2));
-
+                
                 [pointPath moveToPoint:CGPointMake(circleCenter.x + (inflexionWidth / 2), circleCenter.y)];
                 [pointPath addArcWithCenter:circleCenter radius:inflexionWidth / 2 startAngle:0 endAngle:(CGFloat) (2 * M_PI) clockwise:YES];
-
+                
                 //jet text display text
                 if (chartData.showPointLabel) {
                     [gradePathArray addObject:[self createPointLabelFor:chartData.getData(i).rawY pointCenter:circleCenter width:inflexionWidth withChartData:chartData]];
                 }
-
+                
                 if (i > 0) {
-
+                    
                     // calculate the point for line
                     float distance = (float) sqrt(pow(x - last_x, 2) + pow(y - last_y, 2));
                     float last_x1 = last_x + (inflexionWidth / 2) / distance * (x - last_x);
@@ -531,25 +532,25 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
                     to = [NSValue valueWithCGPoint:CGPointMake(circleCenter.x + (inflexionWidth / 2), circleCenter.y)];
                 }
             }
-                // Square point
+            // Square point
             else if (chartData.inflexionPointStyle == PNLineChartPointStyleSquare) {
-
+                
                 CGRect squareRect = CGRectMake(x - inflexionWidth / 2, y - inflexionWidth / 2, inflexionWidth, inflexionWidth);
                 CGPoint squareCenter = CGPointMake(squareRect.origin.x + (squareRect.size.width / 2), squareRect.origin.y + (squareRect.size.height / 2));
-
+                
                 [pointPath moveToPoint:CGPointMake(squareCenter.x - (inflexionWidth / 2), squareCenter.y - (inflexionWidth / 2))];
                 [pointPath addLineToPoint:CGPointMake(squareCenter.x + (inflexionWidth / 2), squareCenter.y - (inflexionWidth / 2))];
                 [pointPath addLineToPoint:CGPointMake(squareCenter.x + (inflexionWidth / 2), squareCenter.y + (inflexionWidth / 2))];
                 [pointPath addLineToPoint:CGPointMake(squareCenter.x - (inflexionWidth / 2), squareCenter.y + (inflexionWidth / 2))];
                 [pointPath closePath];
-
+                
                 // text display text
                 if (chartData.showPointLabel) {
                     [gradePathArray addObject:[self createPointLabelFor:chartData.getData(i).rawY pointCenter:squareCenter width:inflexionWidth withChartData:chartData]];
                 }
-
+                
                 if (i > 0) {
-
+                    
                     // calculate the point for line
                     float distance = (float) sqrt(pow(x - last_x, 2) + pow(y - last_y, 2));
                     float last_x1 = last_x + (inflexionWidth / 2);
@@ -563,25 +564,25 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
                     to = [NSValue valueWithCGPoint:squareCenter];
                 }
             }
-                // Triangle point
+            // Triangle point
             else if (chartData.inflexionPointStyle == PNLineChartPointStyleTriangle) {
-
+                
                 CGRect squareRect = CGRectMake(x - inflexionWidth / 2, y - inflexionWidth / 2, inflexionWidth, inflexionWidth);
-
+                
                 CGPoint startPoint = CGPointMake(squareRect.origin.x, squareRect.origin.y + squareRect.size.height);
                 CGPoint endPoint = CGPointMake(squareRect.origin.x + (squareRect.size.width / 2), squareRect.origin.y);
                 CGPoint middlePoint = CGPointMake(squareRect.origin.x + (squareRect.size.width), squareRect.origin.y + squareRect.size.height);
-
+                
                 [pointPath moveToPoint:startPoint];
                 [pointPath addLineToPoint:middlePoint];
                 [pointPath addLineToPoint:endPoint];
                 [pointPath closePath];
-
+                
                 // text display text
                 if (chartData.showPointLabel) {
                     [gradePathArray addObject:[self createPointLabelFor:chartData.getData(i).rawY pointCenter:middlePoint width:inflexionWidth withChartData:chartData]];
                 }
-
+                
                 if (i > 0) {
                     // calculate the point for triangle
                     float distance = (float) (sqrt(pow(x - last_x, 2) + pow(y - last_y, 2)) * 1.4);
@@ -596,7 +597,13 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
                     to = [NSValue valueWithCGPoint:startPoint];
                 }
             } else {
-
+                // text display text
+                if (chartData.showPointLabel) {
+                    CGRect circleRect = CGRectMake(x - inflexionWidth / 2, y - inflexionWidth / 2, inflexionWidth, inflexionWidth);
+                    CGPoint circleCenter = CGPointMake(circleRect.origin.x + (circleRect.size.width / 2), circleRect.origin.y + (circleRect.size.height / 2));
+                    [gradePathArray addObject:[self createPointLabelFor:chartData.getData(i).rawY pointCenter:circleCenter width:inflexionWidth withChartData:chartData]];
+                }
+                
                 if (i > 0) {
                     from = [NSValue valueWithCGPoint:CGPointMake(last_x, last_y)];
                     to = [NSValue valueWithCGPoint:CGPointMake(x, y)];
@@ -614,7 +621,7 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
             last_x = x;
             last_y = y;
         }
-
+        
         [pointsOfPath addObject:[lineStartEndPointsArray copy]];
         [pathPoints addObject:[linePointsArray copy]];
         // if rangeColors is not nil then it means we need to draw the chart
@@ -623,12 +630,12 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
         if (self.showSmoothLines && chartData.itemCount >= 4) {
             for (NSDictionary<NSString *, NSValue *> *item in progressLinePaths) {
                 NSArray<NSDictionary *> *calculatedRanges =
-                        [self colorRangesBetweenP1:[item[@"from"] CGPointValue]
-                                                P2:[item[@"to"] CGPointValue]
-                                       rangeColors:chartData.rangeColors
-                                      defaultColor:defaultColor];
+                [self colorRangesBetweenP1:[item[@"from"] CGPointValue]
+                                        P2:[item[@"to"] CGPointValue]
+                               rangeColors:chartData.rangeColors
+                              defaultColor:defaultColor];
                 for (NSDictionary *range in calculatedRanges) {
-//                    NSLog(@"range : %@ range: %@ color %@", range[@"from"], range[@"to"], range[@"color"]);
+                    //                    NSLog(@"range : %@ range: %@ color %@", range[@"from"], range[@"to"], range[@"color"]);
                     UIBezierPath *currentProgressLine = [UIBezierPath bezierPath];
                     CGPoint segmentP1 = [range[@"from"] CGPointValue];
                     CGPoint segmentP2 = [range[@"to"] CGPointValue];
@@ -645,12 +652,12 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
         } else {
             for (NSDictionary<NSString *, NSValue *> *item in progressLinePaths) {
                 NSArray<NSDictionary *> *calculatedRanges =
-                        [self colorRangesBetweenP1:[item[@"from"] CGPointValue]
-                                                P2:[item[@"to"] CGPointValue]
-                                       rangeColors:chartData.rangeColors
-                                      defaultColor:defaultColor];
+                [self colorRangesBetweenP1:[item[@"from"] CGPointValue]
+                                        P2:[item[@"to"] CGPointValue]
+                               rangeColors:chartData.rangeColors
+                              defaultColor:defaultColor];
                 for (NSDictionary *range in calculatedRanges) {
-//                    NSLog(@"range : %@ range: %@ color %@", range[@"from"], range[@"to"], range[@"color"]);
+                    //                    NSLog(@"range : %@ range: %@ color %@", range[@"from"], range[@"to"], range[@"color"]);
                     UIBezierPath *currentProgressLine = [UIBezierPath bezierPath];
                     [currentProgressLine moveToPoint:[range[@"from"] CGPointValue]];
                     [currentProgressLine addLineToPoint:[range[@"to"] CGPointValue]];
@@ -699,7 +706,7 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
     for (PNLineChartData *chartData in _chartData) {
         // create as many chart line layers as there are data-lines
         [self.chartLineArray addObject:[NSMutableArray new]];
-
+        
         // create point
         CAShapeLayer *pointLayer = [CAShapeLayer layer];
         pointLayer.strokeColor = [[chartData.color colorWithAlphaComponent:chartData.alpha] CGColor];
@@ -716,10 +723,10 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
     CGFloat yMax = 0.0f;
     CGFloat yMin = MAXFLOAT;
     NSMutableArray *yLabelsArray = [NSMutableArray new];
-
+    
     for (PNLineChartData *chartData in data) {
         // create as many chart line layers as there are data-lines
-
+        
         for (NSUInteger i = 0; i < chartData.itemCount; i++) {
             CGFloat yValue = chartData.getData(i).y;
             [yLabelsArray addObject:[NSString stringWithFormat:@"%2f", yValue]];
@@ -727,43 +734,43 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
             yMin = fminf(yMin, yValue);
         }
     }
-
-
+    
+    
     if (_yValueMin == -FLT_MAX) {
         _yValueMin = (_yFixedValueMin > -FLT_MAX) ? _yFixedValueMin : yMin;
     }
     if (_yValueMax == -FLT_MAX) {
         _yValueMax = (CGFloat) ((_yFixedValueMax > -FLT_MAX) ? _yFixedValueMax : yMax + yMax / 10.0);
     }
-
+    
     if (_showGenYLabels) {
         [self setYLabels];
     }
-
+    
 }
 
 #pragma mark - Update Chart Data
 
 - (void)updateChartData:(NSArray *)data {
     _chartData = data;
-
+    
     [self prepareYLabelsWithData:data];
-
+    
     [self calculateChartPath:_chartPath
                andPointsPath:_pointPath
             andPathKeyPoints:_pathPoints
        andPathStartEndPoints:_endPointsOfPath
   andProgressLinePathsColors:_progressLinePathsColors];
-
+    
     for (NSUInteger lineIndex = 0; lineIndex < self.chartData.count; lineIndex++) {
-
+        
         CAShapeLayer *chartLine = (CAShapeLayer *) self.chartLineArray[lineIndex];
         CAShapeLayer *pointLayer = (CAShapeLayer *) self.chartPointArray[lineIndex];
-
-
+        
+        
         NSArray<UIBezierPath *> *progressLines = _chartPath[lineIndex];
         UIBezierPath *pointPath = _pointPath[lineIndex];
-
+        
         for(UIBezierPath *progressLine in progressLines) {
             CABasicAnimation *pathAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
             pathAnimation.fromValue = (id) chartLine.path;
@@ -774,7 +781,7 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
             [chartLine addAnimation:pathAnimation forKey:@"animationKey"];
             chartLine.path = progressLine.CGPath;
         }
-
+        
         CABasicAnimation *pointPathAnimation = [CABasicAnimation animationWithKeyPath:@"path"];
         pointPathAnimation.fromValue = (id) pointLayer.path;
         pointPathAnimation.toValue = (__bridge id) [pointPath CGPath];
@@ -782,12 +789,12 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
         pointPathAnimation.autoreverses = NO;
         pointPathAnimation.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
         [pointLayer addAnimation:pointPathAnimation forKey:@"animationKey"];
-
+        
         pointLayer.path = pointPath.CGPath;
-
-
+        
+        
     }
-
+    
 }
 
 #define IOS7_OR_LATER [[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0
@@ -795,73 +802,73 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
 - (void)drawRect:(CGRect)rect {
     if (self.isShowCoordinateAxis) {
         CGFloat yAxisOffset = 10.f;
-
+        
         CGContextRef ctx = UIGraphicsGetCurrentContext();
         UIGraphicsPopContext();
         UIGraphicsPushContext(ctx);
         CGContextSetLineWidth(ctx, self.axisWidth);
         CGContextSetStrokeColorWithColor(ctx, [self.axisColor CGColor]);
-
-//        CGFloat xAxisWidth = CGRectGetWidth(rect) - (_chartMarginLeft + _chartMarginRight) / 2;
+        
+        //        CGFloat xAxisWidth = CGRectGetWidth(rect) - (_chartMarginLeft + _chartMarginRight) / 2;
         CGFloat xAxisWidth = CGRectGetWidth(rect) - (_chartMarginLeft + _chartMarginRight);
         CGFloat yAxisHeight = _chartMarginBottom + _chartCavanHeight;
-
+        
         // draw coordinate axis
-//        CGContextMoveToPoint(ctx, _chartMarginBottom + yAxisOffset, 0);
-//        CGContextAddLineToPoint(ctx, _chartMarginBottom + yAxisOffset, yAxisHeight);
+        //        CGContextMoveToPoint(ctx, _chartMarginBottom + yAxisOffset, 0);
+        //        CGContextAddLineToPoint(ctx, _chartMarginBottom + yAxisOffset, yAxisHeight);
         CGContextMoveToPoint(ctx, _chartMarginLeft + yAxisOffset, 0);
         CGContextAddLineToPoint(ctx, _chartMarginLeft + yAxisOffset, yAxisHeight);
         CGContextAddLineToPoint(ctx, xAxisWidth+_chartMarginLeft, yAxisHeight);
-//        NSLog(@"%@ -> %@ -> %@", NSStringFromCGPoint(CGPointMake(_chartMarginBottom + yAxisOffset, 0)),  NSStringFromCGPoint(CGPointMake(_chartMarginBottom + yAxisOffset, yAxisHeight)),NSStringFromCGPoint(CGPointMake(xAxisWidth+_chartMarginLeft, yAxisHeight)));
+        //        NSLog(@"%@ -> %@ -> %@", NSStringFromCGPoint(CGPointMake(_chartMarginBottom + yAxisOffset, 0)),  NSStringFromCGPoint(CGPointMake(_chartMarginBottom + yAxisOffset, yAxisHeight)),NSStringFromCGPoint(CGPointMake(xAxisWidth+_chartMarginLeft, yAxisHeight)));
         CGContextStrokePath(ctx);
-
+        
         // draw y axis arrow
-//        CGContextMoveToPoint(ctx, _chartMarginBottom + yAxisOffset - 3, 6);
-//        CGContextAddLineToPoint(ctx, _chartMarginBottom + yAxisOffset, 0);
-//        CGContextAddLineToPoint(ctx, _chartMarginBottom + yAxisOffset + 3, 6);
+        //        CGContextMoveToPoint(ctx, _chartMarginBottom + yAxisOffset - 3, 6);
+        //        CGContextAddLineToPoint(ctx, _chartMarginBottom + yAxisOffset, 0);
+        //        CGContextAddLineToPoint(ctx, _chartMarginBottom + yAxisOffset + 3, 6);
         CGContextMoveToPoint(ctx, _chartMarginLeft + yAxisOffset - 3, 6);
         CGContextAddLineToPoint(ctx, _chartMarginLeft + yAxisOffset, 0);
         CGContextAddLineToPoint(ctx, _chartMarginLeft + yAxisOffset + 3, 6);
         CGContextStrokePath(ctx);
-
+        
         // draw x axis arrow
         CGContextMoveToPoint(ctx, xAxisWidth+_chartMarginLeft - 6, yAxisHeight - 3);
         CGContextAddLineToPoint(ctx, xAxisWidth+_chartMarginLeft, yAxisHeight);
         CGContextAddLineToPoint(ctx, xAxisWidth+_chartMarginLeft - 6, yAxisHeight + 3);
         CGContextStrokePath(ctx);
-
+        
         if (self.showLabel) {
-
+            
             // draw x axis separator
             CGPoint point;
             for (NSUInteger i = 0; i < [self.xLabels count]; i++) {
-//                point = CGPointMake(2 * _chartMarginLeft + (i * _xLabelWidth), _chartMarginBottom + _chartCavanHeight);
+                //                point = CGPointMake(2 * _chartMarginLeft + (i * _xLabelWidth), _chartMarginBottom + _chartCavanHeight);
                 point = CGPointMake(2 * _chartMarginLeft + (i * _xLabelWidth), _chartMarginTop + _chartCavanHeight);
                 CGContextMoveToPoint(ctx, point.x, point.y - 2);
                 CGContextAddLineToPoint(ctx, point.x, point.y);
                 CGContextStrokePath(ctx);
             }
-
+            
             // draw y axis separator
             CGFloat yStepHeight = _chartCavanHeight / _yLabelNum;
             for (NSUInteger i = 0; i < [self.yLabels count]; i++) {
-//                point = CGPointMake(_chartMarginBottom + yAxisOffset, (_chartCavanHeight - i * yStepHeight + _yLabelHeight / 2));
-                point = CGPointMake(_chartMarginLeft + yAxisOffset, (_chartCavanHeight - i * yStepHeight ));
+                //                point = CGPointMake(_chartMarginBottom + yAxisOffset, (_chartCavanHeight - i * yStepHeight + _yLabelHeight / 2));
+                point = CGPointMake(_chartMarginLeft + yAxisOffset, (_chartCavanHeight - i * yStepHeight + _chartMarginTop));
                 CGContextMoveToPoint(ctx, point.x, point.y);
                 CGContextAddLineToPoint(ctx, point.x + 2, point.y);
                 CGContextStrokePath(ctx);
             }
         }
-
+        
         UIFont *font = [UIFont systemFontOfSize:11];
-
+        
         // draw y unit
         if ([self.yUnit length]) {
             CGFloat height = [PNLineChart sizeOfString:self.yUnit withWidth:30.f font:font].height;
             CGRect drawRect = CGRectMake(_chartMarginLeft + 10 + 5, 0, 30.f, height);
             [self drawTextInContext:ctx text:self.yUnit inRect:drawRect font:font color:self.yLabelColor];
         }
-
+        
         // draw x unit
         if ([self.xUnit length]) {
             CGFloat height = [PNLineChart sizeOfString:self.xUnit withWidth:30.f font:font].height;
@@ -879,9 +886,10 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
         } else {
             CGContextSetStrokeColorWithColor(ctx, [UIColor lightGrayColor].CGColor);
         }
-        for (NSUInteger i = 0; i < _yLabelNum; i++) {
-//            point = CGPointMake(_chartMarginLeft + yAxisOffset, (_chartCavanHeight - i * yStepHeight + _yLabelHeight / 2));
-            point = CGPointMake(_chartMarginLeft + yAxisOffset, (_chartCavanHeight - i * yStepHeight));
+//        for (NSUInteger i = 0; i < _yLabelNum; i++) {
+        for (NSUInteger i = 0; i < [self.yLabels count]; i++) {
+            //            point = CGPointMake(_chartMarginLeft + yAxisOffset, (_chartCavanHeight - i * yStepHeight + _yLabelHeight / 2));
+            point = CGPointMake(_chartMarginLeft + yAxisOffset, (_chartCavanHeight - i * yStepHeight + _chartMarginTop));
             CGContextMoveToPoint(ctx, point.x, point.y);
             // add dotted style grid
             CGFloat dash[] = {6, 5};
@@ -893,7 +901,7 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
             CGContextStrokePath(ctx);
         }
     }
-
+    
     [super drawRect:rect];
 }
 
@@ -911,7 +919,7 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
         innerGrade = ((CGFloat) y - _yValueMin) / (_yValueMax - _yValueMin);
     }
     return _chartCavanHeight - (innerGrade * _chartCavanHeight) + _chartMarginTop;
-//    return _chartCavanHeight - (innerGrade * _chartCavanHeight) + (_yLabelHeight / 2) + _chartMarginTop;
+    //    return _chartCavanHeight - (innerGrade * _chartCavanHeight) + (_yLabelHeight / 2) + _chartMarginTop;
 }
 
 /**
@@ -949,13 +957,13 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
         }
         // tRange : convert the rangeColors.range values to value between yValueMin and yValueMax
         CGFloat transformedStart = [self yValuePositionInLineChart:(CGFloat)
-                colorForRangeInfo.range.location];
+                                    colorForRangeInfo.range.location];
         CGFloat transformedEnd = [self yValuePositionInLineChart:(CGFloat)
-                (colorForRangeInfo.range.location + colorForRangeInfo.range.length)];
-
+                                  (colorForRangeInfo.range.location + colorForRangeInfo.range.length)];
+        
         NSRange pathRange = NSMakeRange((NSUInteger) fmin(p1.y, p2.y), (NSUInteger) fabs(p2.y - p1.y));
         NSRange tRange = NSMakeRange((NSUInteger) fmin(transformedStart, transformedEnd),
-                (NSUInteger) fabs(transformedEnd - transformedStart));
+                                     (NSUInteger) fabs(transformedEnd - transformedStart));
         if (NSIntersectionRange(tRange, pathRange).length > 0) {
             CGPoint partition1EndPoint;
             CGPoint partition2EndPoint;
@@ -984,9 +992,9 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
                                            defaultColor:defaultColor];
             }
             partition2 = @{
-                    @"color": colorForRangeInfo.color,
-                    @"from": [NSValue valueWithCGPoint:partition1EndPoint],
-                    @"to": [NSValue valueWithCGPoint:partition2EndPoint]};
+                           @"color": colorForRangeInfo.color,
+                           @"from": [NSValue valueWithCGPoint:partition1EndPoint],
+                           @"to": [NSValue valueWithCGPoint:partition2EndPoint]};
             if (p2.y != partition2EndPoint.y) {
                 partition3 = [self colorRangesBetweenP1:partition2EndPoint
                                                      P2:p2
@@ -995,7 +1003,7 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
             }
             return [[partition1 arrayByAddingObject:partition2] arrayByAddingObjectsFromArray:partition3];
         } else {
-
+            
             return [self colorRangesBetweenP1:p1
                                            P2:p2
                                   rangeColors:remainingRanges
@@ -1003,9 +1011,9 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
         }
     } else {
         return @[@{
-                @"color": defaultColor,
-                @"from": [NSValue valueWithCGPoint:p1],
-                @"to": [NSValue valueWithCGPoint:p2]}];
+                     @"color": defaultColor,
+                     @"from": [NSValue valueWithCGPoint:p1],
+                     @"to": [NSValue valueWithCGPoint:p2]}];
     }
 }
 
@@ -1021,41 +1029,41 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
     _pathPoints = [[NSMutableArray alloc] init];
     _endPointsOfPath = [[NSMutableArray alloc] init];
     self.userInteractionEnabled = YES;
-
+    
     _yFixedValueMin = -FLT_MAX;
     _yFixedValueMax = -FLT_MAX;
     _yValueMax = -FLT_MAX;
     _yValueMin = -FLT_MAX;
     _yLabelNum = 5;
     _yLabelHeight = [[[[PNChartLabel alloc] init] font] pointSize];
-
-//    _chartMargin = 40;
-
+    
+    //    _chartMargin = 40;
+    
     _chartMarginLeft = 25.0;
     _chartMarginRight = 25.0;
     _chartMarginTop = 25.0;
     _chartMarginBottom = 25.0;
-
+    
     _yLabelFormat = @"%1.f";
-
+    
     _chartCavanWidth = self.frame.size.width - _chartMarginLeft - _chartMarginRight;
     _chartCavanHeight = self.frame.size.height - _chartMarginBottom - _chartMarginTop;
-
+    
     // Coordinate Axis Default Values
     _showCoordinateAxis = NO;
     _axisColor = [UIColor colorWithRed:0.4f green:0.4f blue:0.4f alpha:1.f];
     _axisWidth = 1.f;
-
+    
     // do not create curved line chart by default
     _showSmoothLines = NO;
-
+    
 }
 
 #pragma mark - tools
 
 + (CGSize)sizeOfString:(NSString *)text withWidth:(float)width font:(UIFont *)font {
     CGSize size = CGSizeMake(width, MAXFLOAT);
-
+    
     if ([text respondsToSelector:@selector(boundingRectWithSize:options:attributes:context:)]) {
         NSDictionary *tdic = @{NSFontAttributeName: font};
         size = [text boundingRectWithSize:size
@@ -1068,7 +1076,7 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
         size = [text sizeWithFont:font constrainedToSize:size lineBreakMode:NSLineBreakByCharWrapping];
 #pragma clang diagnostic pop
     }
-
+    
     return size;
 }
 
@@ -1099,11 +1107,11 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
         NSMutableParagraphStyle *priceParagraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
         priceParagraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
         priceParagraphStyle.alignment = NSTextAlignmentLeft;
-
+        
         if (color != nil) {
             [text drawInRect:rect
               withAttributes:@{NSParagraphStyleAttributeName: priceParagraphStyle, NSFontAttributeName: font,
-                      NSForegroundColorAttributeName: color}];
+                               NSForegroundColorAttributeName: color}];
         } else {
             [text drawInRect:rect
               withAttributes:@{NSParagraphStyleAttributeName: priceParagraphStyle, NSFontAttributeName: font}];
@@ -1120,7 +1128,7 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
 }
 
 - (NSString *)formatYLabel:(double)value {
-
+    
     if (self.yLabelBlockFormatter) {
         return self.yLabelBlockFormatter((CGFloat) value);
     } else {
@@ -1128,7 +1136,7 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
             NSString *format = self.yLabelFormat ?: @"%1.f";
             return [NSString stringWithFormat:format, value];
         }
-
+        
         NSNumberFormatter *numberFormatter = [[NSNumberFormatter alloc] init];
         [numberFormatter setFormatterBehavior:NSNumberFormatterBehavior10_4];
         [numberFormatter setNumberStyle:NSNumberFormatterDecimalStyle];
@@ -1140,20 +1148,20 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
     if ([self.chartData count] < 1) {
         return nil;
     }
-
+    
     /* This is a short line that refers to the chart data */
     CGFloat legendLineWidth = 40;
-
+    
     /* x and y are the coordinates of the starting point of each legend item */
     CGFloat x = 0;
     CGFloat y = 0;
-
+    
     /* accumulated height */
     CGFloat totalHeight = 0;
     CGFloat totalWidth = 0;
-
+    
     NSMutableArray *legendViews = [[NSMutableArray alloc] init];
-
+    
     /* Determine the max width of each legend item */
     CGFloat maxLabelWidth;
     if (self.legendStyle == PNLegendItemStyleStacked) {
@@ -1161,23 +1169,23 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
     } else {
         maxLabelWidth = MAXFLOAT;
     }
-
+    
     /* this is used when labels wrap text and the line
      * should be in the middle of the first row */
     CGFloat singleRowHeight = [PNLineChart sizeOfString:@"Test"
                                               withWidth:MAXFLOAT
                                                    font:self.legendFont ? self.legendFont : [UIFont systemFontOfSize:12.0f]].height;
-
+    
     NSUInteger counter = 0;
     NSUInteger rowWidth = 0;
     NSUInteger rowMaxHeight = 0;
-
+    
     for (PNLineChartData *pdata in self.chartData) {
         /* Expected label size*/
         CGSize labelsize = [PNLineChart sizeOfString:pdata.dataTitle
                                            withWidth:maxLabelWidth
                                                 font:self.legendFont ? self.legendFont : [UIFont systemFontOfSize:12.0f]];
-
+        
         /* draw lines */
         if ((rowWidth + labelsize.width + legendLineWidth > mWidth) && (self.legendStyle == PNLegendItemStyleSerial)) {
             rowWidth = 0;
@@ -1187,34 +1195,34 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
         }
         rowWidth += labelsize.width + legendLineWidth;
         totalWidth = self.legendStyle == PNLegendItemStyleSerial ? fmaxf(rowWidth, totalWidth) : fmaxf(totalWidth, labelsize.width + legendLineWidth);
-
+        
         /* If there is inflection decorator, the line is composed of two lines
          * and this is the space that separates two lines in order to put inflection
          * decorator */
-
+        
         CGFloat inflexionWidthSpacer = pdata.inflexionPointStyle == PNLineChartPointStyleTriangle ? pdata.inflexionPointWidth / 2 : pdata.inflexionPointWidth;
-
+        
         CGFloat halfLineLength;
-
+        
         if (pdata.inflexionPointStyle != PNLineChartPointStyleNone) {
             halfLineLength = (CGFloat) ((legendLineWidth * 0.8 - inflexionWidthSpacer) / 2);
         } else {
             halfLineLength = (CGFloat) (legendLineWidth * 0.8);
         }
-
+        
         UIView *line = [[UIView alloc] initWithFrame:CGRectMake((CGFloat) (x + legendLineWidth * 0.1), y + (singleRowHeight - pdata.lineWidth) / 2, halfLineLength, pdata.lineWidth)];
-
+        
         line.backgroundColor = pdata.color;
         line.alpha = pdata.alpha;
         [legendViews addObject:line];
-
+        
         if (pdata.inflexionPointStyle != PNLineChartPointStyleNone) {
             line = [[UIView alloc] initWithFrame:CGRectMake((CGFloat) (x + legendLineWidth * 0.1 + halfLineLength + inflexionWidthSpacer), y + (singleRowHeight - pdata.lineWidth) / 2, halfLineLength, pdata.lineWidth)];
             line.backgroundColor = pdata.color;
             line.alpha = pdata.alpha;
             [legendViews addObject:line];
         }
-
+        
         // Add inflexion type
         UIColor *inflexionPointColor = pdata.inflexionPointColor;
         if (!inflexionPointColor) {
@@ -1226,27 +1234,27 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
                                     inflexionStyle:pdata.inflexionPointStyle
                                           andColor:inflexionPointColor
                                           andAlpha:pdata.alpha]];
-
+        
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(x + legendLineWidth, y, labelsize.width, labelsize.height)];
         label.text = pdata.dataTitle;
         label.textColor = self.legendFontColor ? self.legendFontColor : [UIColor blackColor];
         label.font = self.legendFont ? self.legendFont : [UIFont systemFontOfSize:12.0f];
         label.lineBreakMode = NSLineBreakByWordWrapping;
         label.numberOfLines = 0;
-
+        
         rowMaxHeight = (NSUInteger) fmaxf(rowMaxHeight, labelsize.height);
         x += self.legendStyle == PNLegendItemStyleStacked ? 0 : labelsize.width + legendLineWidth;
         y += self.legendStyle == PNLegendItemStyleStacked ? labelsize.height : 0;
-
-
+        
+        
         totalHeight = self.legendStyle == PNLegendItemStyleSerial ? fmaxf(totalHeight, rowMaxHeight + y) : totalHeight + labelsize.height;
-
+        
         [legendViews addObject:label];
         counter++;
     }
-
+    
     UIView *legend = [[UIView alloc] initWithFrame:CGRectMake(0, 0, mWidth, totalHeight)];
-
+    
     for (UIView *v in legendViews) {
         [legend addSubview:v];
     }
@@ -1257,12 +1265,12 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
 - (UIImageView *)drawInflexion:(CGFloat)size center:(CGPoint)center strokeWidth:(CGFloat)sw inflexionStyle:(PNLineChartPointStyle)type andColor:(UIColor *)color andAlpha:(CGFloat)alfa {
     //Make the size a little bigger so it includes also border stroke
     CGSize aSize = CGSizeMake(size + sw, size + sw);
-
-
+    
+    
     UIGraphicsBeginImageContextWithOptions(aSize, NO, 0.0);
     CGContextRef context = UIGraphicsGetCurrentContext();
-
-
+    
+    
     if (type == PNLineChartPointStyleCircle) {
         CGContextAddArc(context, (size + sw) / 2, (size + sw) / 2, size / 2, 0, (CGFloat) (M_PI * 2), YES);
     } else if (type == PNLineChartPointStyleSquare) {
@@ -1274,24 +1282,24 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
         CGContextAddLineToPoint(context, sw / 2, size + sw / 2);
         CGContextClosePath(context);
     }
-
+    
     //Set some stroke properties
     CGContextSetLineWidth(context, sw);
     CGContextSetAlpha(context, alfa);
     CGContextSetStrokeColorWithColor(context, color.CGColor);
-
+    
     //Finally draw
     CGContextDrawPath(context, kCGPathStroke);
-
+    
     //now get the image from the context
     UIImage *squareImage = UIGraphicsGetImageFromCurrentImageContext();
-
+    
     UIGraphicsEndImageContext();
-
+    
     //// Translate origin
     CGFloat originX = (CGFloat) (center.x - (size + sw) / 2.0);
     CGFloat originY = (CGFloat) (center.y - (size + sw) / 2.0);
-
+    
     UIImageView *squareImageView = [[UIImageView alloc] initWithImage:squareImage];
     [squareImageView setFrame:CGRectMake(originX, originY, size + sw, size + sw)];
     return squareImageView;
@@ -1304,33 +1312,41 @@ andProgressLinePathsColors:(NSMutableArray *)progressLinePathsColors {
     [textLayer setAlignmentMode:kCAAlignmentCenter];
     [textLayer setForegroundColor:[chartData.pointLabelColor CGColor]];
     [textLayer setBackgroundColor:self.backgroundColor.CGColor];
-//    [textLayer setBackgroundColor:[self.backgroundColor colorWithAlphaComponent:0.8].CGColor];
-//    [textLayer setCornerRadius:(CGFloat) (textLayer.fontSize / 8.0)];
-
+    textLayer.truncationMode = @"end";
+    //    [textLayer setBackgroundColor:[self.backgroundColor colorWithAlphaComponent:0.8].CGColor];
+    //    [textLayer setCornerRadius:(CGFloat) (textLayer.fontSize / 8.0)];
+    
     if (chartData.pointLabelFont != nil) {
         [textLayer setFont:(__bridge CFTypeRef) (chartData.pointLabelFont)];
         textLayer.fontSize = [chartData.pointLabelFont pointSize];
     }
-
-    CGFloat textHeight = (CGFloat) (textLayer.fontSize * 1.1);
+    
+//    CGFloat textHeight = (CGFloat) (textLayer.fontSize * 1.1);
     // FIXME: convert the grade to string and use its length instead of hardcoding 8
-    CGFloat textWidth = width * 8;
+//    CGFloat textWidth = width * 8;
     CGFloat textStartPosY;
-
+    
     textStartPosY = pointCenter.y - textLayer.fontSize;
-
+    
     [self.layer addSublayer:textLayer];
-
+    
     if (chartData.pointLabelFormat != nil) {
-        [textLayer setString:[[NSString alloc] initWithFormat:chartData.pointLabelFormat, grade]];
+        if (grade < 1 && grade > 0) {
+            [textLayer setString:[[NSString alloc] initWithFormat:@"%.2f", grade]];
+        }else {
+            [textLayer setString:[[NSString alloc] initWithFormat:chartData.pointLabelFormat, grade]];
+        }
     } else {
         [textLayer setString:[[NSString alloc] initWithFormat:_yLabelFormat, grade]];
     }
-
-    [textLayer setFrame:CGRectMake(0, 0, textWidth, textHeight)];
+    
+    CGSize size = [textLayer.string sizeWithAttributes:@{NSFontAttributeName:(__bridge id) textLayer.font}];
+    
+//    [textLayer setFrame:CGRectMake(0, 0, textWidth, textHeight)];
+    [textLayer setFrame:CGRectMake(0, 0, MIN(size.width, self.xLabelWidth), size.height)];
     [textLayer setPosition:CGPointMake(pointCenter.x, textStartPosY)];
     textLayer.contentsScale = [UIScreen mainScreen].scale;
-
+    
     return textLayer;
 }
 
